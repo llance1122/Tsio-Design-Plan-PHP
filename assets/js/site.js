@@ -104,10 +104,17 @@ function swap(el, cond, on, off) {
 	}
 
 	// ---- 往下捲收起、往上捲出現 ----
-	let lastY = window.scrollY;
+	// iPhone 的回彈：拉過頂端（或底端）時捲動位置會暫時變成負數（或超過最底），彈回來時會被誤判成
+	// 「往下捲」而把導覽列收起來。所以先把位置限制在可捲動的範圍內，並且在頁面頂端附近一律顯示
+	const scrollTop = () => {
+		const max = Math.max(document.documentElement.scrollHeight - window.innerHeight, 0);
+		return Math.min(Math.max(window.scrollY, 0), max);
+	};
+	let lastY = scrollTop();
 	function onScroll() {
-		const y = window.scrollY;
-		const visible = state.menuOpen || y <= lastY;
+		const y = scrollTop();
+		// 位置沒變（例如在最底端回彈）就維持原狀
+		const visible = state.menuOpen || y <= nav.offsetHeight || (y === lastY ? state.visible : y < lastY);
 		lastY = y;
 		if (visible !== state.visible) {
 			state.visible = visible;
