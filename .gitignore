@@ -1,0 +1,15 @@
+# 機密設定（資料庫密碼、後台密碼）
+includes/config.local.php
+
+# 後台上傳的海報（不進版控）
+uploads/*
+!uploads/.gitkeep
+
+# Tailwind 編譯工具（體積大，依 tools/build-css.bat 的說明自行下載）
+tools/tailwindcss.exe
+
+# 系統與編輯器產生的檔案
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

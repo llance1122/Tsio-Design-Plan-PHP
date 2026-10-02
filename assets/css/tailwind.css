@@ -1,0 +1,517 @@
+/* ============================================================
+   全站樣式原始檔（Tailwind CSS v4）
+   ⚠️ 網頁實際載入的是編譯後的 app.css，改完這支要重新編譯：
+      tools\build-css.bat
+   只改文字、圖片、PHP 邏輯不用編譯；有「新增或修改 Tailwind class」才需要。
+   ============================================================ */
+@import url("https://fonts.googleapis.com/css2?family=Shippori+Mincho&family=Yuji+Syuku&display=swap");
+@import "tailwindcss" source(none);
+
+/* Tailwind 掃描這些檔案，找出用到的 class */
+@source "../../**/*.php";
+@source "../js/*.js";
+
+/* ------------------------------------------------------------
+   設計參數（動畫、間距）
+   Tailwind class 以 var() 讀取，例如 duration-[var(--motion-base)]、mt-[var(--title-gap)]
+   JS 動畫（Banner、照片牆）的參數在 assets/js/site.js 最上方
+   ------------------------------------------------------------ */
+:root {
+	/* 時長：fast 小互動（顏色）、base 一般互動（hover、選單）、slow 進場淡入、banner 首頁擦入 */
+	--motion-fast: 200ms;
+	--motion-base: 300ms;
+	--motion-slow: 1000ms;
+	--motion-banner: 1400ms;
+	/* 緩動曲線：spring 會過衝一次再回彈，只用在位移／縮放／旋轉 */
+	--motion-ease-standard: ease-in-out;
+	--motion-ease-wipe: cubic-bezier(0.77, 0, 0.175, 1);
+	--motion-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+	/* 跑馬燈跑完一輪的時間：數字越大越慢 */
+	--motion-marquee: 32000ms;
+	/* 頁面載入淡入、捲動進場：同一組手感 */
+	--page-enter-duration: 1000ms;
+	--page-enter-distance: 20px;
+	--page-enter-ease: cubic-bezier(0.34, 1.56, 0.64, 1);
+	--reveal-duration: 1000ms;
+	--reveal-distance: 20px;
+	--reveal-ease: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+	/* 小標題 → 內文的間距：內容是圖片／卡片時用 title-gap，純文字用 title-gap-text */
+	--title-gap: 60px;
+	--title-gap-text: 30px;
+}
+@media (min-width: 768px) {
+	:root { --title-gap: 70px; --title-gap-text: 40px; }
+}
+@media (min-width: 1024px) {
+	:root { --title-gap: 80px; --title-gap-text: 45px; }
+}
+
+* {
+	box-sizing: border-box;
+}
+
+@theme {
+	--color-primary: #303030;
+	--color-gray: #d9d9d9;
+	--color-secondary: #f2f2f2;
+}
+
+@utility sr-only {
+	/* icon替代文字 */
+	clip: rect(1px, 1px, 1px, 1px);
+	clip-path: inset(50%);
+	height: 1px;
+	width: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+}
+
+@utility heading {
+	font-family: "Shippori Mincho", serif;
+	font-size: 22px;
+	letter-spacing: 0.1em;
+	color: #303030;
+}
+
+@utility heading-bold {
+	font-family: "Shippori Mincho", serif;
+	font-weight: 600;
+	font-size: 22px;
+	letter-spacing: 0.1em;
+	color: #303030;
+}
+
+@utility subtitle-bold {
+	font-family: "Shippori Mincho", serif;
+	font-weight: 600;
+	font-size: 16px;
+	letter-spacing: 0.1em;
+	color: #303030;
+}
+
+@utility subtitle {
+	font-family: "Shippori Mincho", serif;
+	font-size: 16px;
+	letter-spacing: 0.1em;
+	color: #303030;
+}
+
+@utility footer {
+	font-family: "Shippori Mincho", serif;
+	font-size: 14px;
+	letter-spacing: 0.1em;
+	color: #303030;
+}
+
+@utility bodyText-bold {
+	font-family: "Shippori Mincho", serif;
+	font-weight: 600;
+	font-size: 14px;
+	letter-spacing: 0.1em;
+	color: #303030;
+}
+
+@utility bodyText {
+	font-family: "Shippori Mincho", serif;
+	font-size: 14px;
+	letter-spacing: 0.1em;
+	color: #303030;
+}
+
+@utility heading-bold-web {
+	font-family: "Shippori Mincho", serif;
+	font-weight: 300;
+	font-size: 30px;
+	letter-spacing: 0.1em;
+	color: #303030;
+}
+
+@utility heading-web {
+	font-family: "Shippori Mincho", serif;
+	font-size: 30px;
+	letter-spacing: 0.1em;
+	color: #303030;
+}
+
+@utility subtitle-bold-web {
+	font-family: "Shippori Mincho", serif;
+	font-size: 24px;
+	letter-spacing: 0.1em;
+	font-weight: 600;
+	color: #303030;
+}
+
+@utility subtitle-web {
+	font-family: "Shippori Mincho", serif;
+	font-size: 24px;
+	letter-spacing: 0.1em;
+	color: #303030;
+}
+
+@utility bodyText-large-bold-web {
+	font-family: "Shippori Mincho", serif;
+	font-size: 20px;
+	letter-spacing: 0.1em;
+	font-weight: 600;
+	color: #303030;
+}
+
+@utility bodyText-large-web {
+	font-family: "Shippori Mincho", serif;
+	font-size: 20px;
+	letter-spacing: 0.1em;
+	color: #303030;
+}
+
+@utility bodyText-web {
+	font-family: "Shippori Mincho", serif;
+	font-size: 16px;
+	letter-spacing: 0.1em;
+	color: #303030;
+}
+
+@utility bodyText-bold-web {
+	font-family: "Shippori Mincho", serif;
+	font-size: 16px;
+	letter-spacing: 0.1em;
+	font-weight: 600;
+	color: #303030;
+}
+
+@utility concept-title {
+	font-family: "Shippori Mincho", serif;
+	font-size: 36px;
+	letter-spacing: 0.1em;
+	color: #303030;
+}
+
+@utility concept-title-web {
+	font-family: "Shippori Mincho", serif;
+	font-size: 60px;
+	letter-spacing: 0.1em;
+	color: #303030;
+}
+
+@utility label {
+	font-family: "Shippori Mincho", serif;
+	font-size: 12px;
+	letter-spacing: 0.1em;
+	color: #303030;
+}
+
+/* 展覽作品標題：覆蓋 bodyText 的預設黑色，但不影響全站其他 bodyText。 */
+.exhibition-work-title.bodyText {
+	color: #17467d;
+}
+
+/* 餘波區段的標題與副標：Title 元件內仍沿用全站字體設定。 */
+.exhibition-ripple-title.subtitle-bold,
+.exhibition-ripple-title.subtitle-bold-web,
+.exhibition-ripple-subtitle.bodyText {
+	color: #17467d;
+}
+
+/* ----------------------------------------------------- */
+/* Nav hover 底線                                          */
+/* 滑入：origin 在左 → 底線由左往右展開                     */
+/* 滑出：origin 回到右 → 左緣往右收，看起來是往右滑走        */
+/* 時長 / 緩動讀上方 :root 的 CSS 變數                        */
+/*                                                         */
+/* 滑入、滑出用不同曲線是刻意的：                            */
+/* scaleX 屬於空間屬性，照系統慣例該用 spring（同 nav 收合、  */
+/* Project 下拉面板、加號轉減號），滑入過衝一下手感才一致。    */
+/* 但滑出是 scaleX 1→0，spring 的過衝會掠過負值，以 right 為  */
+/* 原點時會在文字右緣閃出一小截反向線段，所以滑出維持 standard。*/
+/* ----------------------------------------------------- */
+@utility nav-underline {
+	position: relative;
+	display: inline-block;
+
+	&::after {
+		content: "";
+		position: absolute;
+		left: 0;
+		bottom: -4px;
+		width: 100%;
+		height: 1px;
+		background-color: currentColor;
+		transform: scaleX(0);
+		transform-origin: right;
+		transition: transform var(--motion-base) var(--motion-ease-standard);
+	}
+
+	&:hover::after,
+	&:focus-visible::after {
+		transform: scaleX(1);
+		transform-origin: left;
+		transition: transform var(--motion-base) var(--motion-ease-spring);
+	}
+
+	/* 當前頁面：底線常駐顯示，不需要 hover。
+	   aria-current="page" 由 PHP 在目前頁面（含子頁）的連結加上；
+	   data-active 給 Plan 下拉觸發項手動標記用。 */
+	&[aria-current="page"]::after,
+	&[data-active="true"]::after {
+		transform: scaleX(1);
+		transform-origin: left;
+		transition: transform var(--motion-base) var(--motion-ease-spring);
+	}
+}
+
+/* ----------------------------------------------------- */
+/* 調整分頁點顏色 */
+/* ----------------------------------------------------- */
+
+/* 設置選中點的顏色 (活躍點) */
+.article-swiper-container .swiper-pagination-bullet-active {
+	background: #303030; /* 例如：鮮紅色或你的品牌主色 */
+}
+
+/* ----------------------------------------------------- */
+/* 調整分頁點位置 */
+/* ----------------------------------------------------- */
+
+/* 調整分頁點容器的位置 */
+.article-swiper-container .swiper-pagination {
+	/* 預設是 bottom: 0;，將其上移 
+       注意：你可能需要調整 ArticleCarousel 內的 padding 來騰出空間 */
+	bottom: -5px !important;
+
+	/* 如果你想讓點點更靠近卡片，而不是靠容器底部 */
+	/* top: 100%; */
+}
+
+/* ----------------------------------------------------- */
+/* 跑馬燈公告（首頁 index.php）                               */
+/* 白底 + 上下兩條細線（不是整條深色底），文字無限往左捲      */
+/*                                                         */
+/* 橫幅厚度做成變數，想調粗細改 --marquee-h 一個值就好。    */
+/* 速度讀上方的 --motion-marquee。                           */
+/* 緩動固定 linear —— 跑馬燈一旦加減速就會看起來像卡頓，     */
+/* 這是全站唯一不套 motion token 曲線的動畫。               */
+/* ----------------------------------------------------- */
+:root {
+	--marquee-h: 44px;
+}
+
+@keyframes marquee-scroll {
+	from {
+		transform: translateX(0);
+	}
+	to {
+		/* 軌道內容剛好排兩份，位移一半就無縫接回原點 */
+		transform: translateX(-50%);
+	}
+}
+
+.marquee-track {
+	animation: marquee-scroll var(--motion-marquee) linear infinite;
+}
+
+/* 游標停在橫幅上時暫停，方便看清楚文字與點擊 */
+.marquee-bar:hover .marquee-track {
+	animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.marquee-track {
+		animation: none;
+	}
+}
+
+/* ----------------------------------------------------- */
+/* 頁面進場（includes/layout.php 的 .page-enter）                          */
+/* 切換路由時整頁淡入 + 由下往上浮 20px，                   */
+/* 跟捲動進場的 .headline 是同一組手感。                  */
+/*                                                         */
+/* 參數讀上方 :root 的 --page-enter-*。           */
+/*  */
+/*                                                         */
+/* fill-mode 用 backwards 不用 forwards/both：              */
+/* 只在「動畫開始前」套用起始狀態，動畫跑完就完全放手，      */
+/* 元素上不會殘留 transform（殘留的話會變成 fixed/sticky    */
+/* 子元素的定位基準，圖庫視差與置頂標語都會歪掉）。          */
+/* ----------------------------------------------------- */
+@keyframes page-enter {
+	from {
+		opacity: 0;
+		transform: translateY(var(--page-enter-distance));
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.page-enter {
+	animation: page-enter var(--page-enter-duration) var(--page-enter-ease)
+		backwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.page-enter {
+		animation: none;
+	}
+}
+
+/* ----------------------------------------------------- */
+/* 捲動進場（assets/js/site.js）                    */
+/* .headline 捲進畫面時由下往上淡入。                       */
+/* 只有 <html> 帶 js-reveal（JS 有執行）時才先隱藏，         */
+/* 搜尋引擎與關閉 JS 的瀏覽器會直接看到完整內容。            */
+/* 用 transform 而不是 translate：Tailwind v4 的 translate-* */
+/* 走獨立的 translate 屬性，兩者疊加互不覆蓋。              */
+/* 進場後 transform 回到 none，不殘留（理由同上方換頁動畫）。 */
+/* ----------------------------------------------------- */
+.js-reveal .headline:not(.is-revealed) {
+	opacity: 0;
+	transform: translateY(var(--reveal-distance));
+}
+
+.js-reveal .headline {
+	transition:
+		opacity var(--reveal-duration) var(--reveal-ease),
+		transform var(--reveal-duration) var(--reveal-ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.js-reveal .headline:not(.is-revealed) {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+/* ----------------------------------------------------- */
+/* 文章內文（Articles/view.php 與後台編輯器共用）            */
+/* 內文是後台編輯器產生的 HTML，沒有 class，               */
+/* 所以在這裡依標籤套用網站的字級與間距。                   */
+/* 標題 h3 的大間距與段落間距沿用改版前的設定，             */
+/* 舊文章看起來不會變。                                     */
+/* ----------------------------------------------------- */
+.article-body > :not(:last-child) {
+	@apply mb-[10px] lg:mb-[20px];
+}
+.article-body :is(p, li, td, th, blockquote) {
+	@apply bodyText lg:bodyText-web;
+}
+.article-body :is(h2, h3) {
+	@apply subtitle-bold lg:subtitle-bold-web mt-[5vh] lg:mt-[15vh];
+}
+.article-body h4 {
+	@apply bodyText-bold lg:bodyText-bold-web mt-[3vh] lg:mt-[6vh];
+}
+.article-body :is(strong, b) {
+	font-weight: 600;
+}
+.article-body a {
+	@apply underline underline-offset-4 hover:text-gray-500;
+}
+.article-body ul {
+	@apply list-disc pl-[1.5em];
+}
+.article-body ol {
+	@apply list-decimal pl-[1.5em];
+}
+.article-body li + li {
+	@apply mt-[0.4em];
+}
+.article-body blockquote {
+	@apply border-l-2 border-primary pl-[1.2em];
+}
+.article-body blockquote,
+.article-body blockquote p {
+	color: #6a6a6a;
+}
+.article-body :is(img, iframe) {
+	@apply w-full h-auto;
+}
+.article-body iframe {
+	@apply aspect-video border-0;
+}
+.article-body figcaption {
+	font-family: "Shippori Mincho", serif;
+	font-size: 12px;
+	letter-spacing: 0.1em;
+	color: #6a6a6a;
+	text-align: center;
+	margin-top: 8px;
+}
+.article-body table {
+	@apply w-full border-collapse;
+}
+.article-body :is(th, td) {
+	@apply border border-gray px-[12px] py-[8px] text-left align-top;
+}
+.article-body th {
+	@apply bg-secondary font-semibold;
+}
+.article-body hr {
+	@apply border-t border-gray my-[5vh];
+}
+
+/* 後台編輯器裡：標題間距改小一點（前台用 vh，放在編輯框裡會空太多） */
+.article-body[contenteditable] :is(h2, h3) {
+	@apply mt-[1.5em];
+}
+.article-body[contenteditable] h4 {
+	@apply mt-[1em];
+}
+.article-body[contenteditable] > :first-child {
+	@apply mt-0;
+}
+.article-body[contenteditable]:empty::before {
+	content: attr(data-placeholder);
+	@apply text-neutral-400;
+}
+
+/* ----------------------------------------------------- */
+/* 後台：時間選擇器（flatpickr）配色                        */
+/* 套件原本是藍色，改成網站的深灰。flatpickr.min.css 在      */
+/* app.css 前面載入，這裡同樣的選擇器就能蓋過去。             */
+/* ----------------------------------------------------- */
+.flatpickr-calendar {
+	@apply rounded-xl border border-neutral-200 font-sans;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+.flatpickr-calendar.arrowTop::before,
+.flatpickr-calendar.arrowTop::after,
+.flatpickr-calendar.arrowBottom::before,
+.flatpickr-calendar.arrowBottom::after {
+	display: none;
+}
+.flatpickr-months .flatpickr-prev-month:hover svg,
+.flatpickr-months .flatpickr-next-month:hover svg {
+	fill: #303030;
+}
+.flatpickr-current-month {
+	@apply text-base font-semibold;
+}
+.flatpickr-day {
+	@apply rounded-lg;
+}
+.flatpickr-day:hover,
+.flatpickr-day:focus {
+	@apply bg-neutral-100 border-neutral-100;
+}
+.flatpickr-day.today {
+	@apply border-neutral-400;
+}
+.flatpickr-day.today:hover {
+	@apply bg-neutral-100 border-neutral-400 text-primary;
+}
+.flatpickr-day.selected,
+.flatpickr-day.selected:hover,
+.flatpickr-day.selected:focus {
+	@apply bg-primary border-primary text-white;
+}
+.flatpickr-time {
+	@apply border-t border-neutral-100;
+}
+.flatpickr-time input:hover,
+.flatpickr-time input:focus,
+.flatpickr-time .flatpickr-am-pm:hover {
+	@apply bg-neutral-100;
+}

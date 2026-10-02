@@ -1,0 +1,7 @@
+# 統一換行符號：文字檔一律 LF，只有 Windows 批次檔用 CRLF
+* text=auto eol=lf
+*.bat text eol=crlf
+*.webp binary
+*.jpg binary
+*.png binary
+*.svg text eol=lf
