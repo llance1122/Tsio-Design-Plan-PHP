@@ -259,6 +259,17 @@ function admin_page_start(string $title, array $styles = []): void
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="robots" content="noindex">
 	<title><?= e($title) ?>｜<?= e(config('site_name')) ?></title>
+	<?php /* 分享到 LINE／FB 時的預覽：固定顯示後台的介紹，不然它們會抓頁面上的文字（例如登入頁的忘記密碼說明） */ ?>
+	<?php $shareText = config('site_name') . ' 網站後台，供設醮團隊發布與管理文章，需登入帳號使用。'; ?>
+	<meta name="description" content="<?= e($shareText) ?>">
+	<meta property="og:type" content="website">
+	<meta property="og:site_name" content="<?= e(config('site_name')) ?>">
+	<meta property="og:title" content="設醮後台｜<?= e(config('site_name')) ?>">
+	<meta property="og:description" content="<?= e($shareText) ?>">
+	<meta property="og:url" content="<?= e(site_origin() . url('admin/')) ?>">
+	<meta property="og:image" content="<?= e(site_origin() . url('assets/og/default.jpg')) ?>">
+	<meta property="og:image:width" content="1200">
+	<meta property="og:image:height" content="630">
 	<link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=">
 	<?php /* 套件的樣式放在 app.css 前面，app.css 裡的配色才蓋得過去 */ ?>
 	<?php foreach ($styles as $css): ?>
